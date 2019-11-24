@@ -10,8 +10,8 @@
 #include "shaders.h"
 
 
-const float ROTATION_OFFSET = 0.0f;
-//const float ROTATION_OFFSET = 45.0f;
+//const float ROTATION_OFFSET = 0.0f;
+const float ROTATION_OFFSET = 45.0f;
 
 const float SCALE = 0.2f, OFFSET = 0.8f, DIFF = 0.4f;
 
@@ -43,9 +43,6 @@ void initGL();
 void setupShaders();
 void setupBuffers();
 void renderScene();
-
-void renderTriangles();
-void renderSquares();
 
 int main(int argc, char* argv[])
 {
@@ -227,30 +224,33 @@ void renderScene()
 
 	glUseProgram(shaderProgram);
 
-	renderTriangles();
-
-	renderSquares();
-
-	glBindVertexArray(0);
-}
-
-void renderTriangles()
-{
 	float x = -OFFSET, y = OFFSET;
 
-	glBindVertexArray(vao[0]);
-	glUniform4fv(colorLoc, 1, TRIANGLE_COLOR);
-
 	float rotation = 90.0f - ROTATION_OFFSET;
+
+	glm::mat4 tempMat;
 
 	for (int i = 0; i < 5; i++)
 	{
 		for (int j = 0; j < 5; j++)
 		{
+			glBindVertexArray(vao[1]);
+			glUniform4fv(colorLoc, 1, SQUARE_COLOR);
+
+			mvMatrix = glm::mat4(1.0f);
+			mvMatrix = tempMat = glm::translate(mvMatrix, glm::vec3(x, y, 0.0f));
+			mvMatrix = glm::rotate(mvMatrix, glm::radians(-ROTATION_OFFSET), glm::vec3(0.0f, 0.0f, 1.0f));
+			mvMatrix = glm::scale(mvMatrix, glm::vec3(SCALE, SCALE, 0.0f));
+
+			glUniformMatrix4fv(mvMatrixLoc, 1, GL_FALSE, glm::value_ptr(mvMatrix));
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+			glBindVertexArray(vao[0]);
+			glUniform4fv(colorLoc, 1, TRIANGLE_COLOR);
+
 			for (int k = 0; k < 4; k++)
 			{
-				mvMatrix = glm::mat4(1.0f);
-				mvMatrix = glm::translate(mvMatrix, glm::vec3(x, y, 0.0f));
+				mvMatrix = tempMat;
 
 				mvMatrix = glm::rotate(mvMatrix, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));
 				mvMatrix = glm::translate(mvMatrix, glm::vec3(0.0f, -0.15f, 0.0f));
@@ -267,30 +267,6 @@ void renderTriangles()
 		x = -OFFSET;
 		y -= DIFF;
 	}
-}
 
-void renderSquares()
-{
-	float x = -OFFSET, y = OFFSET;
-
-	glBindVertexArray(vao[1]);
-	glUniform4fv(colorLoc, 1, SQUARE_COLOR);
-
-	for (int i = 0; i < 5; i++)
-	{
-		for (int j = 0; j < 5; j++)
-		{
-			mvMatrix = glm::mat4(1.0f);
-			mvMatrix = glm::translate(mvMatrix, glm::vec3(x, y, 0.0f));
-			mvMatrix = glm::rotate(mvMatrix, glm::radians(-ROTATION_OFFSET), glm::vec3(0.0f, 0.0f, 1.0f));
-			mvMatrix = glm::scale(mvMatrix, glm::vec3(SCALE, SCALE, 0.0f));
-
-			glUniformMatrix4fv(mvMatrixLoc, 1, GL_FALSE, glm::value_ptr(mvMatrix));
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-			x += DIFF;
-		}
-		x = -OFFSET;
-		y -= DIFF;
-	}
+	glBindVertexArray(0);
 }
