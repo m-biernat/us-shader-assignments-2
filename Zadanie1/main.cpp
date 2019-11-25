@@ -42,6 +42,7 @@ GLuint mvMatrixLoc; // lokalizacja zmiennej jednorodnej - macierz model-widok
 glm::mat4 projMatrix; // macierz projekcji
 glm::mat4 mvMatrix; // macierz model-widok
 
+bool wireframe = true; // czy rysowac siatke (true) czy wypelnienie (false)
 glm::vec3 rotationAngles = glm::vec3(0.0, 0.0, 0.0); // katy rotacji wokol poszczegolnych osi
 float fovy = 15.0f; // kat patrzenia (uzywany do skalowania sceny)
 float aspectRatio = static_cast<float>(WIDTH) / HEIGHT;
@@ -204,6 +205,10 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 				updateProjectionMatrix();
 			}
 			break;
+
+		case GLFW_KEY_F1:
+			wireframe = !wireframe;
+			break;
 		}
 	}
 }
@@ -320,8 +325,13 @@ void renderScene()
 	glUseProgram(shaderProgram);
 	glUniformMatrix4fv(projMatrixLoc, 1, GL_FALSE, glm::value_ptr(projMatrix));
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glLineWidth(lineWidth);
+	if (wireframe)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glLineWidth(lineWidth);
+	}
+	else
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	mvMatrix = glm::rotate(mvMatrix, glm::radians(rotationAngles.z), glm::vec3(0.0f, 0.0f, 1.0f));
 	mvMatrix = glm::rotate(mvMatrix, glm::radians(rotationAngles.y), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -379,12 +389,10 @@ void generateSphereIndices(std::vector<unsigned int> &indices)
 {
 	int i = 0, j = 0, k;
 
-	while (j < U_MAX - 1)
+	while (j < U_MAX)
 	{
 		j++;
 		k = j + 1;
-
-		if (k == U_MAX) k = i + 1;
 
 		indices.push_back(i);
 		indices.push_back(j);
@@ -393,7 +401,7 @@ void generateSphereIndices(std::vector<unsigned int> &indices)
 		//std::cout << i << " " << j << " " << k << std::endl;
 	}
 
-	for (i = 1; i < V_MAX * U_MAX; i++)
+	for (i = 2; i < V_MAX * U_MAX; i++)
 	{
 		j++;
 		k = j + 1;
@@ -401,6 +409,10 @@ void generateSphereIndices(std::vector<unsigned int> &indices)
 		indices.push_back(i);
 		indices.push_back(j);
 		indices.push_back(k);
+
+		indices.push_back(i);
+		indices.push_back(j);
+		indices.push_back(i - 1);
 
 		//std::cout << i << " " << j << " " << k << std::endl;
 	}
