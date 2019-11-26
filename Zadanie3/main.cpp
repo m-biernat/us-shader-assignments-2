@@ -1,4 +1,6 @@
-﻿#define _USE_MATH_DEFINES
+﻿// Michał Biernat INŻ III PGK 1 - Zestaw 2 - Zadanie 3
+
+#define _USE_MATH_DEFINES
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -329,7 +331,7 @@ void renderScene()
 		}
 		else
 		{
-			mvMatrix = tempMat;
+			mvMatrix = tempMat; // macierz z poprzedniego obiektu, aby przesunac i obrocic względem niego
 		}
 		
 		mvMatrix = glm::rotate(mvMatrix, glm::radians(rotation[i]), glm::vec3(0.0f, 0.0f, 1.0f));

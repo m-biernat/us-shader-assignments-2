@@ -1,4 +1,6 @@
-﻿#define _USE_MATH_DEFINES
+﻿// Michał Biernat INŻ III PGK 1 - Zestaw 2 - Zadanie 1
+
+#define _USE_MATH_DEFINES
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -394,9 +396,9 @@ void generateSphereIndices(std::vector<unsigned int> &indices)
 		j++;
 		k = j + 1;
 
-		indices.push_back(i);
-		indices.push_back(j);
-		indices.push_back(k);
+		indices.push_back(i); //	0, 0, 0 ...
+		indices.push_back(j); //	1, 2, 3 ...		domkniecie gory
+		indices.push_back(k); //	2, 3, 4 ...
 
 		//std::cout << i << " " << j << " " << k << std::endl;
 	}
@@ -406,13 +408,13 @@ void generateSphereIndices(std::vector<unsigned int> &indices)
 		j++;
 		k = j + 1;
 
-		indices.push_back(i);
-		indices.push_back(j);
-		indices.push_back(k);
+		indices.push_back(i); //		  2,	   3,	    4 ...
+		indices.push_back(j); //	  U_MAX, U_MAX+1, U_MAX+2 ...	1/2 quada
+		indices.push_back(k); //	U_MAX+1, U_MAX+2, U_MAX+3 ...
 
-		indices.push_back(i);
-		indices.push_back(j);
-		indices.push_back(i - 1);
+		indices.push_back(i); //		  2,	   3,	    4 ...
+		indices.push_back(j); //	  U_MAX, U_MAX+1, U_MAX+2 ...	2/2 quada
+		indices.push_back(i - 1); //	  1,	   2,		3 ...
 
 		//std::cout << i << " " << j << " " << k << std::endl;
 	}

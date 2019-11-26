@@ -1,4 +1,6 @@
-﻿#include <GL/glew.h>
+﻿// Michał Biernat INŻ III PGK 1 - Zestaw 2 - Zadanie 2
+
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
@@ -238,7 +240,7 @@ void renderScene()
 			glUniform4fv(colorLoc, 1, SQUARE_COLOR);
 
 			mvMatrix = glm::mat4(1.0f);
-			mvMatrix = tempMat = glm::translate(mvMatrix, glm::vec3(x, y, 0.0f));
+			mvMatrix = tempMat = glm::translate(mvMatrix, glm::vec3(x, y, 0.0f)); // ustawia pozycje kwadratu
 			mvMatrix = glm::rotate(mvMatrix, glm::radians(-ROTATION_OFFSET), glm::vec3(0.0f, 0.0f, 1.0f));
 			mvMatrix = glm::scale(mvMatrix, glm::vec3(SCALE, SCALE, 0.0f));
 
@@ -250,10 +252,10 @@ void renderScene()
 
 			for (int k = 0; k < 4; k++)
 			{
-				mvMatrix = tempMat;
+				mvMatrix = tempMat; // pozycja ostatniego kwadratu
 
 				mvMatrix = glm::rotate(mvMatrix, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));
-				mvMatrix = glm::translate(mvMatrix, glm::vec3(0.0f, -0.15f, 0.0f));
+				mvMatrix = glm::translate(mvMatrix, glm::vec3(0.0f, -0.15f, 0.0f)); // przesuniecie od srodka kwadratu
 
 				mvMatrix = glm::scale(mvMatrix, glm::vec3(SCALE, SCALE, 0.0f));
 
